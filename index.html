@@ -262,7 +262,9 @@ function getCookie(name) {
   return match ? decodeURIComponent(match[1]) : '';
 }
 function saveIdentity(name, drink, avatar) {
-  saveIdentity(myName, myDrink, myAvatar);
+  localStorage.setItem('jr_name', name);
+  localStorage.setItem('jr_drink', drink);
+  localStorage.setItem('jr_avatar', avatar);
   setCookie('jr_name', name, 365);
   setCookie('jr_drink', drink, 365);
   setCookie('jr_avatar', avatar, 365);
@@ -437,7 +439,7 @@ window.submitLog = async function() {
 };
 
 window.saveProfile = async function() {
-  localStorage.setItem('jr_avatar', myAvatar);
+  saveIdentity(myName, myDrink, myAvatar);
   await setDoc(doc(db, 'users', myName), { avatar: myAvatar||'' }, { merge: true });
   showToast('Photo saved!');
 };
