@@ -252,9 +252,24 @@ const storage = getStorage(app);
 
 const NAMES = ['Jack','Swag','Carlin','Deegan','Mack','Bob'];
 
-let myName = localStorage.getItem('jr_name') || '';
-let myDrink = localStorage.getItem('jr_drink') || '';
-let myAvatar = localStorage.getItem('jr_avatar') || '';
+function setCookie(name, val, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + days*24*60*60*1000);
+  document.cookie = name + '=' + encodeURIComponent(val) + ';expires=' + d.toUTCString() + ';path=/';
+}
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+  return match ? decodeURIComponent(match[1]) : '';
+}
+function saveIdentity(name, drink, avatar) {
+  saveIdentity(myName, myDrink, myAvatar);
+  setCookie('jr_name', name, 365);
+  setCookie('jr_drink', drink, 365);
+  setCookie('jr_avatar', avatar, 365);
+}
+let myName = getCookie('jr_name') || localStorage.getItem('jr_name') || '';
+let myDrink = getCookie('jr_drink') || localStorage.getItem('jr_drink') || '';
+let myAvatar = getCookie('jr_avatar') || localStorage.getItem('jr_avatar') || '';
 let photoData = null;
 
 function getInitials(name) { return name ? name[0].toUpperCase() : '?'; }
@@ -359,8 +374,7 @@ window.finishOnboard = async function() {
   const drink = document.getElementById('ob-drink').value.trim();
   if (!name || !drink) return;
   myName = name; myDrink = drink;
-  localStorage.setItem('jr_name', myName);
-  localStorage.setItem('jr_drink', myDrink);
+  saveIdentity(myName, myDrink, myAvatar);
   await setDoc(doc(db, 'users', myName), { name: myName, drink: myDrink, count: 0, avatar: '' }, { merge: true });
   initApp();
 };
