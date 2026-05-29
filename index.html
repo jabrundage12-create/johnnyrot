@@ -170,6 +170,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="track"><div class="fill" id="progress-fill" style="width:0%"></div></div>
       <div class="pct-label" id="pct-label">0% there</div>
     </div>
+    <div class="countdown" id="countdown">
+        <div class="cd-box"><div class="cd-num" id="cd-days">--</div><div class="cd-label">days</div></div>
+        <div class="cd-divider">:</div>
+        <div class="cd-box"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">hours</div></div>
+        <div class="cd-divider">:</div>
+        <div class="cd-box"><div class="cd-num" id="cd-mins">--</div><div class="cd-label">mins</div></div>
+        <div class="cd-divider">:</div>
+        <div class="cd-box"><div class="cd-num" id="cd-secs">--</div><div class="cd-label">secs</div></div>
+      </div>
+    </div>
     <div id="lb-container"></div>
     <div class="section-title">Recent</div>
     <div class="feed-card" id="feed-container">
@@ -472,6 +482,28 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
+
+
+// Countdown to Labour Day Sept 7 11:59pm
+const END_DATE = new Date('2026-09-07T23:59:00');
+function updateCountdown() {
+  const now = new Date();
+  const diff = END_DATE - now;
+  if (diff <= 0) {
+    document.getElementById('countdown').innerHTML = '<div style="text-align:center;font-size:14px;color:#8e8e93;padding:8px 0">Summer is over 🥲</div>';
+    return;
+  }
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const secs = Math.floor((diff % (1000*60)) / 1000);
+  document.getElementById('cd-days').textContent = String(days).padStart(2,'0');
+  document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cd-mins').textContent = String(mins).padStart(2,'0');
+  document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
 // Init
 if (myName && myDrink) {
